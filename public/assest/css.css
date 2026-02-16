@@ -1,0 +1,610 @@
+@extends('layout.app')
+@include('layout.navbar')
+@livewireStyles
+@section('content')
+<?php
+$name = $info['name'];
+?>
+
+@php
+    $links = preg_split('/(~)/', $info['link0']);
+    $names = preg_split('/(-)/', $info['name0']);
+    $link = $links[$num];
+@endphp
+
+<!-- Link to external CSS file -->
+<link rel="stylesheet" href="{{ asset('css/lecture-details.css') }}">
+
+<!-- Physics Background Animation -->
+<div class="physics-background">
+    <div class="atom atom-1">
+        <div class="nucleus"></div>
+        <div class="electron-orbit orbit-1"><div class="electron"></div></div>
+        <div class="electron-orbit orbit-2"><div class="electron"></div></div>
+        <div class="atom-glow"></div>
+    </div>
+    <div class="atom atom-2">
+        <div class="nucleus"></div>
+        <div class="electron-orbit orbit-1"><div class="electron"></div></div>
+        <div class="electron-orbit orbit-2"><div class="electron"></div></div>
+        <div class="atom-glow"></div>
+    </div>
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="formula formula-1">F = ma</div>
+    <div class="formula formula-2">E = mc²</div>
+    <div class="formula formula-3">v = λf</div>
+</div>
+
+<!-- Enhanced Scroll Progress Bar -->
+<div class="scroll-progress">
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="progress-glow"></div>
+</div>
+
+<!-- Main Content -->
+<main class="main">
+    <!-- Breadcrumb Section -->
+    <section class="breadcrumb-section">
+        <div class="container">
+            <div class="breadcrumb-content scroll-animate">
+                <div class="breadcrumb-nav">
+                    <a href="{{ url('/') }}" class="breadcrumb-link">
+                        <i class="fas fa-home"></i>
+                        الرئيسية
+                    </a>
+                    <i class="fas fa-chevron-left breadcrumb-separator"></i>
+                    <a href="{{ url('/#classes') }}" class="breadcrumb-link">المحاضرات</a>
+                    <i class="fas fa-chevron-left breadcrumb-separator"></i>
+                    <span class="breadcrumb-current">{{ $name }}</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lecture Details Section -->
+    <section class="lecture-details section" id="lecture-details">
+        <div class="container">
+            <!-- Section Header -->
+            <div class="section-header animate-on-load animate-delay-1">
+                <span class="section-badge">تفاصيل المحاضرة</span>
+                <h2 class="section-title">
+                    <span id="mainLectureTitle">{{ $name }}</span>
+                    <span class="section-title-decoration"></span>
+                </h2>
+                <p class="section-subtitle">استكشف محتوى المحاضرة، شاهد الفيديو، وحمل الملفات، واستعد للامتحان</p>
+            </div>
+
+            <!-- Toggle Button -->
+            <div class="lecture-toggle-wrapper animate-on-load animate-delay-2">
+                <button class="btn btn-cta toggle-lecture-content-btn" id="toggleLectureBtn">
+                    <i class="fas fa-play"></i>
+                    <span>عرض محتوى المحاضرة</span>
+                    <div class="btn-particles">
+                        <div class="btn-particle"></div>
+                        <div class="btn-particle"></div>
+                        <div class="btn-particle"></div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Lecture Content Container -->
+            <div class="lecture-content-container hidden animate-on-load animate-delay-3" id="lectureContent">
+                <div class="lecture-main-grid">
+                    <!-- Video/Exam Section -->
+                    <div class="lecture-main-content">
+                        <div class="content-transition" id="lectureMainContent">
+                            @if ($result_exam == null)
+                                <!-- Exam Section -->
+                                <div class="exam-section" id="examSection">
+                                    <div class="exam-card">
+                                        <div class="exam-header">
+                                            <div class="exam-icon">
+                                                <i class="fas fa-clipboard-check"></i>
+                                            </div>
+                                            <h3 class="exam-title">الامتحان التفاعلي</h3>
+                                            <p class="exam-description">اختبر فهمك للمحاضرة من خلال الامتحان التفاعلي</p>
+                                        </div>
+                                        
+                                        <div class="exam-info">
+                                            <div class="exam-stat">
+                                                <div class="stat-icon">
+                                                    <i class="fas fa-question-circle"></i>
+                                                </div>
+                                                <div class="stat-content">
+                                                    <span class="stat-number">15</span>
+                                                    <span class="stat-label">سؤال</span>
+                                                </div>
+                                            </div>
+                                            <div class="exam-stat">
+                                                <div class="stat-icon">
+                                                    <i class="fas fa-clock"></i>
+                                                </div>
+                                                <div class="stat-content">
+                                                    <span class="stat-number">30</span>
+                                                    <span class="stat-label">دقيقة</span>
+                                                </div>
+                                            </div>
+                                            <div class="exam-stat">
+                                                <div class="stat-icon">
+                                                    <i class="fas fa-trophy"></i>
+                                                </div>
+                                                <div class="stat-content">
+                                                    <span class="stat-number">100</span>
+                                                    <span class="stat-label">نقطة</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="exam-actions">
+                                            <button class="btn btn-cta start-exam-btn" id="startExamBtn">
+                                                <i class="fas fa-play"></i>
+                                                <span>ابدأ الامتحان</span>
+                                                <div class="btn-particles">
+                                                    <div class="btn-particle"></div>
+                                                    <div class="btn-particle"></div>
+                                                    <div class="btn-particle"></div>
+                                                </div>
+                                            </button>
+                                        </div>
+
+                                        <!-- Livewire Component Container -->
+                                        <div class="exam-livewire-container" id="examLivewireContainer" style="display: none;">
+                                            @livewire('exams', ['examId' => $lec])
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <!-- Video Section -->
+                                <div class="video-section" id="videoSection">
+                                    <div class="video-card">
+                                        <div class="video-header">
+                                            <h3 class="video-title" id="currentPartTitle">{{ $names[$num] ?? 'الجزء الأول' }}</h3>
+                                            <div class="video-meta">
+                                                <span class="video-duration">
+                                                    <i class="fas fa-clock"></i>
+                                                    45 دقيقة
+                                                </span>
+                                                <span class="video-quality">
+                                                    <i class="fas fa-hd-video"></i>
+                                                    HD
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="video-container">
+                                            <div class="video-wrapper">
+                                                <iframe id="lectureVideoFrame" 
+                                                        src="{{ $link }}" 
+                                                        allowfullscreen="true"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+                                                </iframe>
+                                                <div class="video-overlay" id="videoOverlay">
+                                                    <div class="play-button">
+                                                        <i class="fas fa-play"></i>
+                                                    </div>
+                                                    <div class="video-info">
+                                                        <h4>انقر لبدء المشاهدة</h4>
+                                                        <p>محاضرة تفاعلية عالية الجودة</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="video-actions">
+                                            <a href="{{ $info['description'] }}" id="lectureFilesLink" class="btn btn-secondary">
+                                                <i class="fas fa-download"></i>
+                                                <span>تحميل ملفات المحاضرة</span>
+                                            </a>
+                                            <button class="btn btn-outline" id="fullscreenBtn">
+                                                <i class="fas fa-expand"></i>
+                                                <span>ملء الشاشة</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Lecture Parts List -->
+                    <div class="lecture-sidebar">
+                        <div class="sidebar-card">
+                            <div class="sidebar-header">
+                                <h3>أجزاء المحاضرة</h3>
+                                <div class="progress-info">
+                                    <span class="progress-text">التقدم: {{ $num + 1 }}/{{ count($names) }}</span>
+                                    <div class="progress-bar-small">
+                                        <div class="progress-fill-small" style="width: {{ (($num + 1) / count($names)) * 100 }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lecture-parts-list" id="lecturePartsList">
+                                @for ($i = 0; $i < count($names); $i++)
+                                    <a href="javascript:void(0)" 
+                                       class="lecture-part-item {{ $i == $num ? 'active' : '' }}" 
+                                       data-part="{{ $i }}" 
+                                       data-name="{{ $names[$i] }}"
+                                       data-link="{{ $links[$i] }}">
+                                        <div class="part-title">
+                                            <i class="{{ $links[$i] == '1' ? 'fas fa-clipboard-check' : 'fas fa-play' }} part-type-icon"></i>
+                                            {{ $names[$i] }}
+                                        </div>
+                                        <div class="part-duration">
+                                            {{ $links[$i] == '1' ? '30 دقيقة' : '45 دقيقة' }}
+                                        </div>
+                                    </a>
+                                @endfor
+                            </div>
+                        </div>
+
+                        <!-- Additional Resources -->
+                        <div class="sidebar-card">
+                            <div class="sidebar-header">
+                                <h3>مصادر إضافية</h3>
+                            </div>
+                            <div class="resources-list">
+                                <a href="{{ $info['description'] }}" class="resource-item">
+                                    <div class="resource-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div class="resource-content">
+                                        <span class="resource-title">ملخص المحاضرة</span>
+                                        <span class="resource-size">2.5 MB</span>
+                                    </div>
+                                </a>
+                                <a href="#" class="resource-item">
+                                    <div class="resource-icon">
+                                        <i class="fas fa-file-powerpoint"></i>
+                                    </div>
+                                    <div class="resource-content">
+                                        <span class="resource-title">عرض تقديمي</span>
+                                        <span class="resource-size">8.1 MB</span>
+                                    </div>
+                                </a>
+                                <a href="#" class="resource-item">
+                                    <div class="resource-icon">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div class="resource-content">
+                                        <span class="resource-title">تمارين إضافية</span>
+                                        <span class="resource-size">1.2 MB</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Store data in HTML attributes -->
+<div id="lectureData" 
+     data-links='@json($links)' 
+     data-names='@json($names)' 
+     data-current-num="{{ $num }}" 
+     data-std="{{ $std }}" 
+     data-lec="{{ $lec }}" 
+     data-info='@json($info)' 
+     style="display: none;">
+</div>
+
+<script>
+// Get data from HTML attributes
+const lectureDataElement = document.getElementById('lectureData');
+let currentLectureData = {
+    links: JSON.parse(lectureDataElement.dataset.links),
+    names: JSON.parse(lectureDataElement.dataset.names),
+    currentNum: parseInt(lectureDataElement.dataset.currentNum),
+    std: lectureDataElement.dataset.std,
+    lec: lectureDataElement.dataset.lec,
+    info: JSON.parse(lectureDataElement.dataset.info)
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeLectureDetails();
+    initializeVideoPlayer();
+    initializeExamSystem();
+    initializeScrollAnimations();
+});
+
+// Initialize Lecture Details
+function initializeLectureDetails() {
+    const toggleBtn = document.getElementById('toggleLectureBtn');
+    const lectureContent = document.getElementById('lectureContent');
+    const toggleIcon = toggleBtn.querySelector('i');
+    const lectureMainContent = document.getElementById('lectureMainContent');
+    const lectureParts = document.querySelectorAll('.lecture-part-item');
+    
+    // Toggle lecture content
+    toggleBtn.addEventListener('click', function() {
+        const isHidden = lectureContent.classList.contains('hidden');
+        if (isHidden) {
+            lectureContent.classList.remove('hidden');
+            toggleBtn.querySelector('span').textContent = 'إخفاء محتوى المحاضرة';
+            toggleIcon.className = 'fas fa-eye-slash';
+            localStorage.setItem('lectureContentVisible', 'true');
+        } else {
+            lectureContent.classList.add('hidden');
+            toggleBtn.querySelector('span').textContent = 'عرض محتوى المحاضرة';
+            toggleIcon.className = 'fas fa-play';
+            localStorage.setItem('lectureContentVisible', 'false');
+        }
+    });
+
+    // Restore lecture content visibility from localStorage
+    const isLectureVisible = localStorage.getItem('lectureContentVisible');
+    if (isLectureVisible === 'true') {
+        lectureContent.classList.remove('hidden');
+        toggleBtn.querySelector('span').textContent = 'إخفاء محتوى المحاضرة';
+        toggleIcon.className = 'fas fa-eye-slash';
+    }
+    
+    // Handle lecture part clicks
+    lectureParts.forEach(part => {
+        part.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const partIndex = parseInt(this.dataset.part);
+            const partName = this.dataset.name;
+            const partLink = this.dataset.link;
+            
+            // Update active state
+            lectureParts.forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update current lecture data
+            currentLectureData.currentNum = partIndex;
+            
+            // Update lecture title
+            const currentTitle = document.getElementById('mainLectureTitle');
+            if (currentTitle) {
+                currentTitle.textContent = partName;
+            }
+            
+            // Show loading animation
+            lectureMainContent.classList.add('fade-out');
+            
+            setTimeout(() => {
+                // Show loading spinner
+                lectureMainContent.innerHTML = `
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <span style="margin-left: 10px;">جاري تحميل المحتوى...</span>
+                    </div>
+                `;
+                lectureMainContent.classList.remove('fade-out');
+                lectureMainContent.classList.add('fade-in');
+                
+                // Update content based on new part
+                updateLectureContent(partIndex, partName, partLink);
+            }, 300);
+        });
+    });
+}
+
+// Function to update lecture content
+function updateLectureContent(partIndex, partName, partLink) {
+    const lectureMainContent = document.getElementById('lectureMainContent');
+    
+    setTimeout(() => {
+        lectureMainContent.classList.add('fade-out');
+        
+        setTimeout(() => {
+            if (partLink === '1') {
+                // Show exam section
+                lectureMainContent.innerHTML = `
+                    <div class="exam-section" id="examSection">
+                        <div class="exam-card">
+                            <div class="exam-header">
+                                <div class="exam-icon">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </div>
+                                <h3 class="exam-title">الامتحان التفاعلي</h3>
+                                <p class="exam-description">اختبر فهمك للمحاضرة من خلال الامتحان التفاعلي</p>
+                            </div>
+                            
+                            <div class="exam-info">
+                                <div class="exam-stat">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-question-circle"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <span class="stat-number">15</span>
+                                        <span class="stat-label">سؤال</span>
+                                    </div>
+                                </div>
+                                <div class="exam-stat">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <span class="stat-number">30</span>
+                                        <span class="stat-label">دقيقة</span>
+                                    </div>
+                                </div>
+                                <div class="exam-stat">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <span class="stat-number">100</span>
+                                        <span class="stat-label">نقطة</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="exam-actions">
+                                <button class="btn btn-cta start-exam-btn" onclick="startExam()">
+                                    <i class="fas fa-play"></i>
+                                    <span>ابدأ الامتحان</span>
+                                    <div class="btn-particles">
+                                        <div class="btn-particle"></div>
+                                        <div class="btn-particle"></div>
+                                        <div class="btn-particle"></div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Show video section
+                lectureMainContent.innerHTML = `
+                    <div class="video-section" id="videoSection">
+                        <div class="video-card">
+                            <div class="video-header">
+                                <h3 class="video-title">${partName}</h3>
+                                <div class="video-meta">
+                                    <span class="video-duration">
+                                        <i class="fas fa-clock"></i>
+                                        45 دقيقة
+                                    </span>
+                                    <span class="video-quality">
+                                        <i class="fas fa-hd-video"></i>
+                                        HD
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="video-container">
+                                <div class="video-wrapper">
+                                    <iframe id="lectureVideoFrame" 
+                                            src="${partLink}" 
+                                            allowfullscreen="true"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+                                    </iframe>
+                                    <div class="video-overlay" id="videoOverlay">
+                                        <div class="play-button">
+                                            <i class="fas fa-play"></i>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4>انقر لبدء المشاهدة</h4>
+                                            <p>محاضرة تفاعلية عالية الجودة</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="video-actions">
+                                <a href="${currentLectureData.info.description}" class="btn btn-secondary">
+                                    <i class="fas fa-download"></i>
+                                    <span>تحميل ملفات المحاضرة</span>
+                                </a>
+                                <button class="btn btn-outline" onclick="toggleFullscreen()">
+                                    <i class="fas fa-expand"></i>
+                                    <span>ملء الشاشة</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Re-initialize video player
+                initializeVideoPlayer();
+            }
+            
+            lectureMainContent.classList.remove('fade-out');
+            lectureMainContent.classList.add('fade-in');
+        }, 300);
+    }, 500);
+}
+
+// Initialize Video Player
+function initializeVideoPlayer() {
+    const videoOverlay = document.getElementById('videoOverlay');
+    const videoFrame = document.getElementById('lectureVideoFrame');
+    
+    // Remove overlay when video is clicked
+    if (videoOverlay) {
+        videoOverlay.addEventListener('click', () => {
+            videoOverlay.style.display = 'none';
+            // Auto-play video if possible
+            if (videoFrame && videoFrame.src) {
+                const newSrc = videoFrame.src + (videoFrame.src.includes('?') ? '&' : '?') + 'autoplay=1';
+                videoFrame.src = newSrc;
+            }
+        });
+    }
+}
+
+// Initialize Exam System
+function initializeExamSystem() {
+    const startExamBtn = document.getElementById('startExamBtn');
+    if (startExamBtn) {
+        startExamBtn.addEventListener('click', startExam);
+    }
+}
+
+// Start exam function
+function startExam() {
+    const button = event.target.closest('.start-exam-btn');
+    const originalHTML = button.innerHTML;
+    
+    // Show loading state
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحضير...';
+    button.disabled = true;
+    button.style.background = 'linear-gradient(135deg, #6b7280, #9ca3af)';
+    
+    setTimeout(() => {
+        button.innerHTML = '<i class="fas fa-check"></i> جاهز للبدء!';
+        button.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        
+        setTimeout(() => {
+            // Show Livewire exam component
+            const examSection = document.getElementById('examSection');
+            examSection.innerHTML = `
+                <div class="exam-livewire-container">
+                    @livewire('exams', ['examId' => ${currentLectureData.lec}])
+                </div>
+            `;
+            
+            // Reinitialize Livewire if needed
+            if (window.Livewire) {
+                window.Livewire.rescan();
+            }
+        }, 1500);
+    }, 2000);
+}
+
+// Fullscreen function
+function toggleFullscreen() {
+    const videoContainer = document.querySelector('.video-wrapper');
+    if (videoContainer) {
+        if (videoContainer.requestFullscreen) {
+            videoContainer.requestFullscreen();
+        } else if (videoContainer.webkitRequestFullscreen) {
+            videoContainer.webkitRequestFullscreen();
+        } else if (videoContainer.msRequestFullscreen) {
+            videoContainer.msRequestFullscreen();
+        }
+    }
+}
+
+// Initialize scroll animations
+function initializeScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all scroll-animate elements
+    document.querySelectorAll('.scroll-animate, .animate-on-load')
+        .forEach(el => observer.observe(el));
+}
+
+console.log('📚 Lecture Details page loaded successfully!');
+console.log('🎥 Video player initialized');
+console.log('📝 Exam system ready');
+console.log('📱 Mobile optimizations active');
+</script>
+
+@livewireScripts
+@endsection
