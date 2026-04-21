@@ -1,169 +1,153 @@
-# نظام إدارة الامتحانات الإلكتروني
+# 🎓 Educational Platform System
 
-نظام متكامل لإدارة الامتحانات الإلكترونية مع واجهة إدارية متقدمة وإمكانيات متعددة.
-
-## المميزات الرئيسية
-
-### 🎯 إدارة الامتحانات
-- إنشاء وتعديل وحذف الامتحانات
-- تحديد مواعيد الامتحانات (بداية ونهاية)
-- تحديد مدة الامتحان وعدد المحاولات المسموحة
-- تفعيل/إلغاء تفعيل الامتحانات
-- ربط الامتحانات بالمحاضرات
-- نسخ الامتحانات الموجودة
-
-### 📝 إدارة الأسئلة
-- دعم أنواع متعددة من الأسئلة:
-  - أسئلة متعددة الخيارات
-  - أسئلة صح/خطأ
-  - أسئلة مقالية
-- رفع الصور للأسئلة
-- تحديد النقاط لكل سؤال
-- إضافة توضيحات للإجابات
-- تفعيل/إلغاء تفعيل الأسئلة
-- نسخ الأسئلة الموجودة
-- تغيير ترتيب الأسئلة
-
-### 📊 إدارة النتائج
-- عرض نتائج الطلاب
-- حساب النسب المئوية والتقديرات
-- إعادة تصحيح النتائج
-- حذف النتائج الفردية أو جميع نتائج امتحان معين
-- تصدير النتائج بصيغ مختلفة
-
-### 🔍 البحث والتصفية
-- بحث متقدم في الامتحانات والأسئلة
-- تصفية حسب المحاضرة والحالة والتاريخ
-- عرض إحصائيات مفصلة
-
-### 📤 التصدير والاستيراد
-- تصدير الامتحانات بصيغة CSV
-- تصدير الأسئلة بصيغة CSV
-- تصدير النتائج بصيغة CSV
-- استيراد الأسئلة من ملف CSV
-- تصدير تقارير مفصلة بصيغة JSON
-
-### 📱 واجهة مستخدم متقدمة
-- تصميم متجاوب يعمل على جميع الأجهزة
-- ألوان متدرجة جميلة
-- رسوم متحركة سلسة
-- أيقونات FontAwesome
-- دعم كامل للغة العربية
-
-## المتطلبات التقنية
-
-- PHP 8.0 أو أحدث
-- Laravel 10 أو أحدث
-- MySQL 5.7 أو أحدث
-- Composer
-- Node.js و NPM
-
-## التثبيت
-
-1. استنساخ المشروع:
-```bash
-git clone [repository-url]
-cd mrahmedhafez.com
-```
-
-2. تثبيت التبعيات:
-```bash
-composer install
-npm install
-```
-
-3. نسخ ملف البيئة:
-```bash
-cp .env.example .env
-```
-
-4. تكوين قاعدة البيانات في ملف `.env`
-
-5. تشغيل الهجرات:
-```bash
-php artisan migrate
-```
-
-6. تشغيل البذور (اختياري):
-```bash
-php artisan db:seed
-```
-
-7. بناء الأصول:
-```bash
-npm run build
-```
-
-8. تشغيل الخادم:
-```bash
-php artisan serve
-```
-
-## الهيكل التقني
-
-### Controllers
-- `ExamController` - إدارة الامتحانات
-- `QuestionController` - إدارة الأسئلة  
-- `ExamResultController` - إدارة النتائج
-
-### Models
-- `Exam` - نموذج الامتحان
-- `Question` - نموذج السؤال
-- `ExamResult` - نموذج نتيجة الامتحان
-- `StudentAnswer` - نموذج إجابة الطالب
-- `Lecture` - نموذج المحاضرة
-
-### Views
-- `dashboard/exams/` - صفحات إدارة الامتحانات
-- `dashboard/questions/` - صفحات إدارة الأسئلة
-- `dashboard/results/` - صفحات عرض النتائج
-
-### Routes
-جميع المسارات محمية بـ middleware الصلاحيات:
-- `/dashboard/exams` - إدارة الامتحانات
-- `/dashboard/questions` - إدارة الأسئلة
-- `/dashboard/results` - عرض النتائج
-
-## الوظائف الجديدة المضافة
-
-### وظائف الامتحانات
-- `export()` - تصدير الامتحانات
-- `duplicate()` - نسخ امتحان موجود
-- البحث المتقدم مع فلاتر متعددة
-
-### وظائف الأسئلة
-- `import()` - استيراد أسئلة من CSV
-- `export()` - تصدير أسئلة الامتحان
-- `duplicate()` - نسخ سؤال موجود
-- `reorder()` - تغيير ترتيب الأسئلة
-
-### وظائف النتائج
-- `recalculate()` - إعادة حساب النتيجة
-- `clearAllResults()` - حذف جميع نتائج امتحان
-- `detailedReport()` - تقرير مفصل للامتحان
-- `sendResults()` - إرسال النتائج عبر البريد
-
-## الأمان
-
-- حماية جميع المسارات بـ middleware الصلاحيات
-- التحقق من صحة البيانات المدخلة
-- حماية من CSRF
-- تشفير البيانات الحساسة
-
-## الدعم
-
-للحصول على الدعم أو الإبلاغ عن مشاكل:
-- إنشاء issue في GitHub
-- التواصل عبر البريد الإلكتروني
-
-## الترخيص
-
-هذا المشروع مرخص تحت رخصة MIT.
-
-## المساهمون
-
-- أحمد حافظ - المطور الرئيسي
+A full-featured **E-Learning Platform** designed to manage educational content, lectures, and online examinations with a scalable and secure backend architecture.
 
 ---
 
-**ملاحظة**: هذا النظام مصمم خصيصاً للعمل مع Laravel Jetstream و Fortify للمصادقة.
+## 🚀 Overview
+
+This project is a **complete educational platform** that provides a powerful system for managing:
+
+* Courses & Lectures
+* Users & Roles
+* Online Exams
+* Student Results & Analytics
+
+Built using **Laravel**, with a strong focus on:
+
+* Scalability
+* Clean Architecture
+* Secure and maintainable code
+
+---
+
+## 🎯 Core Features
+
+### 📚 Course & Lecture Management
+
+* Manage courses and lectures
+* Link exams to specific lectures
+* Structured content organization
+
+---
+
+### 📝 Exam Management
+
+* Create, update, and delete exams
+* Set start/end time and duration
+* Control number of attempts
+* Activate/deactivate exams
+* Duplicate existing exams
+
+---
+
+### ❓ Question Management
+
+* Supports multiple question types:
+
+  * Multiple Choice
+  * True/False
+  * Essay
+* Upload images for questions
+* Assign marks per question
+* Reorder questions
+* Import/Export via CSV
+
+---
+
+### 📊 Results & Analytics
+
+* View student results
+* Calculate percentages and grades
+* Recalculate results
+* Generate detailed reports
+* Export results (CSV / JSON)
+
+---
+
+### 🔍 Search & Filtering
+
+* Advanced search system
+* Filter by date, lecture, and status
+* Detailed statistics
+
+---
+
+### 📤 Import & Export
+
+* Export:
+
+  * Exams
+  * Questions
+  * Results
+* Import questions from CSV
+
+---
+
+### 🔐 Security
+
+* Authentication using Laravel Jetstream & Fortify
+* Role-Based Access Control (RBAC)
+* CSRF Protection
+* Input validation & sanitization
+
+---
+
+## 🛠 Tech Stack
+
+* **Backend:** PHP, Laravel
+* **Database:** MySQL
+* **Frontend:** Blade, Livewire, JavaScript
+* **Architecture:** MVC
+* **Tools:** Git, Composer, NPM
+
+---
+
+## ⚙️ Installation
+
+```bash
+git clone 
+cd project-name
+
+composer install
+npm install
+
+cp .env.example .env
+
+php artisan key:generate
+php artisan migrate
+
+npm run build
+php artisan serve
+```
+
+---
+
+## 🧠 Key Highlights
+
+* Modular and scalable system design
+* Clean Code & SOLID principles
+* RESTful API-ready architecture
+* Optimized database structure
+* Real-world backend project
+
+---
+
+## 📌 Future Improvements
+
+* API Documentation (Swagger)
+* Cloud deployment (AWS / VPS)
+* Payment integration
+* Notification system
+
+---
+
+## 👨‍💻 Author
+
+Ahmed Khaled
+Backend Developer (Laravel)
+
+---
+
+
+MIT License
