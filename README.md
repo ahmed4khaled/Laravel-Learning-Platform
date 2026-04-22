@@ -1,134 +1,169 @@
-# Teacher Course & Exam Management Platform
+# نظام إدارة الامتحانات الإلكتروني
 
-Laravel 10 application for managing a teacher's public course website, student access, lecture sales, QR-based enrollment, and online exams.
+نظام متكامل لإدارة الامتحانات الإلكترونية مع واجهة إدارية متقدمة وإمكانيات متعددة.
 
-This project is not a generic LMS. It is a custom platform built around a real teacher workflow: publishing lectures by grade, redeeming access codes, opening protected course content, managing students from an admin dashboard, and tracking exam results.
+## المميزات الرئيسية
 
-## Overview
+### 🎯 إدارة الامتحانات
+- إنشاء وتعديل وحذف الامتحانات
+- تحديد مواعيد الامتحانات (بداية ونهاية)
+- تحديد مدة الامتحان وعدد المحاولات المسموحة
+- تفعيل/إلغاء تفعيل الامتحانات
+- ربط الامتحانات بالمحاضرات
+- نسخ الامتحانات الموجودة
 
-The codebase combines two layers:
+### 📝 إدارة الأسئلة
+- دعم أنواع متعددة من الأسئلة:
+  - أسئلة متعددة الخيارات
+  - أسئلة صح/خطأ
+  - أسئلة مقالية
+- رفع الصور للأسئلة
+- تحديد النقاط لكل سؤال
+- إضافة توضيحات للإجابات
+- تفعيل/إلغاء تفعيل الأسئلة
+- نسخ الأسئلة الموجودة
+- تغيير ترتيب الأسئلة
 
-- A public-facing website for the teacher profile and lecture browsing
-- An authenticated dashboard for admin operations and exam management
+### 📊 إدارة النتائج
+- عرض نتائج الطلاب
+- حساب النسب المئوية والتقديرات
+- إعادة تصحيح النتائج
+- حذف النتائج الفردية أو جميع نتائج امتحان معين
+- تصدير النتائج بصيغ مختلفة
 
-The project also includes a recent refactor in several modules where controllers delegate business logic to service classes and request validation is moved into Form Request classes.
+### 🔍 البحث والتصفية
+- بحث متقدم في الامتحانات والأسئلة
+- تصفية حسب المحاضرة والحالة والتاريخ
+- عرض إحصائيات مفصلة
 
-## Main Features
+### 📤 التصدير والاستيراد
+- تصدير الامتحانات بصيغة CSV
+- تصدير الأسئلة بصيغة CSV
+- تصدير النتائج بصيغة CSV
+- استيراد الأسئلة من ملف CSV
+- تصدير تقارير مفصلة بصيغة JSON
 
-- Public landing page for the teacher and available lecture categories
-- Lecture browsing by grade and lecture type
-- Authenticated access to purchased or redeemed course content
-- QR code redemption flow for unlocking lectures or subscription-based access
-- Admin dashboard for users, QR codes, lectures, and sales records
-- Exam management dashboard with:
-  - exam CRUD
-  - question CRUD
-  - question import from CSV
-  - exam, question, and result export to CSV
-  - exam duplication
-  - question reordering
-  - result details and simple statistics
-- Assistant question workflow for collecting student questions and answers
-- Assignment submission via Livewire with an admin-facing assignment dashboard
-- Authentication based on Laravel Jetstream, Fortify, and Sanctum
+### 📱 واجهة مستخدم متقدمة
+- تصميم متجاوب يعمل على جميع الأجهزة
+- ألوان متدرجة جميلة
+- رسوم متحركة سلسة
+- أيقونات FontAwesome
+- دعم كامل للغة العربية
 
-## Tech Stack
+## المتطلبات التقنية
 
-- PHP 8.1+
-- Laravel 10
-- MySQL
-- Laravel Jetstream
-- Laravel Fortify
-- Laravel Sanctum
-- Livewire 3
-- Blade templates
-- Vite
-- Tailwind CSS
+- PHP 8.0 أو أحدث
+- Laravel 10 أو أحدث
+- MySQL 5.7 أو أحدث
+- Composer
+- Node.js و NPM
 
-## Project Structure
+## التثبيت
 
-Important application areas:
-
-- `app/Http/Controllers/`
-  Public pages, QR redemption, admin dashboard, exams, assignments, and assistant questions
-- `app/Services/`
-  Refactored business logic for admin actions, exams, questions, QR flow, lectures, and assignments
-- `app/Http/Requests/`
-  Validation classes for newer/refactored modules
-- `app/Models/`
-  Core entities such as `Lecture`, `Exam`, `Question`, `ExamResult`, `QrCode`, and `Sale`
-- `resources/views/`
-  Blade views for the public site, dashboard pages, and Livewire components
-- `routes/web.php`
-  Main web routes for public pages, admin tools, exams, QR access, and course pages
-
-## Key Domain Areas
-
-### Lectures and Access
-
-- Lectures are organized by grade and role/type
-- Course pages are protected by authentication
-- QR codes are used to redeem access and create sale records
-- Monthly and term-based access flows are supported in the routing and QR logic
-
-### Exams
-
-- Exams belong to lectures
-- Questions belong to exams
-- Results are stored per user and attempt
-- Admin users can review results, export them, and generate a JSON detailed report
-
-### Admin Operations
-
-- Search users
-- Manage lecture entries
-- Generate and search QR codes
-- View student QR and sales history
-
-## Setup
-
+1. استنساخ المشروع:
 ```bash
-git clone <repository-url>
-cd <project-folder>
+git clone [repository-url]
+cd mrahmedhafez.com
+```
+
+2. تثبيت التبعيات:
+```bash
 composer install
 npm install
+```
+
+3. نسخ ملف البيئة:
+```bash
 cp .env.example .env
-php artisan key:generate
+```
+
+4. تكوين قاعدة البيانات في ملف `.env`
+
+5. تشغيل الهجرات:
+```bash
 php artisan migrate
+```
+
+6. تشغيل البذور (اختياري):
+```bash
+php artisan db:seed
+```
+
+7. بناء الأصول:
+```bash
 npm run build
+```
+
+8. تشغيل الخادم:
+```bash
 php artisan serve
 ```
 
-Then configure database and application settings in `.env`.
+## الهيكل التقني
 
-## Running Tests
+### Controllers
+- `ExamController` - إدارة الامتحانات
+- `QuestionController` - إدارة الأسئلة  
+- `ExamResultController` - إدارة النتائج
 
-```bash
-php artisan test
-```
+### Models
+- `Exam` - نموذج الامتحان
+- `Question` - نموذج السؤال
+- `ExamResult` - نموذج نتيجة الامتحان
+- `StudentAnswer` - نموذج إجابة الطالب
+- `Lecture` - نموذج المحاضرة
 
-## Current State
+### Views
+- `dashboard/exams/` - صفحات إدارة الامتحانات
+- `dashboard/questions/` - صفحات إدارة الأسئلة
+- `dashboard/results/` - صفحات عرض النتائج
 
-This repository reflects an active real-world project, so it contains a mix of:
+### Routes
+جميع المسارات محمية بـ middleware الصلاحيات:
+- `/dashboard/exams` - إدارة الامتحانات
+- `/dashboard/questions` - إدارة الأسئلة
+- `/dashboard/results` - عرض النتائج
 
-- legacy naming in some routes, views, and model fields
-- newer service-based refactored modules
-- custom business rules tied to one teacher workflow rather than a reusable SaaS product
+## الوظائف الجديدة المضافة
 
-That makes it useful as a portfolio project for showing practical Laravel work, especially around:
+### وظائف الامتحانات
+- `export()` - تصدير الامتحانات
+- `duplicate()` - نسخ امتحان موجود
+- البحث المتقدم مع فلاتر متعددة
 
-- working with existing codebases
-- incremental refactoring
-- dashboard CRUD
-- business-rule implementation
-- relational data modeling
+### وظائف الأسئلة
+- `import()` - استيراد أسئلة من CSV
+- `export()` - تصدير أسئلة الامتحان
+- `duplicate()` - نسخ سؤال موجود
+- `reorder()` - تغيير ترتيب الأسئلة
 
-## Notes
+### وظائف النتائج
+- `recalculate()` - إعادة حساب النتيجة
+- `clearAllResults()` - حذف جميع نتائج امتحان
+- `detailedReport()` - تقرير مفصل للامتحان
+- `sendResults()` - إرسال النتائج عبر البريد
 
-- The application uses custom role checks and route structures instead of a generic permissions package
-- Some UI text and business labels are in Arabic because the target users are Arabic-speaking students and admins
-- The repository is best presented as a custom education management system, not as a fully generalized learning platform
+## الأمان
 
-## License
+- حماية جميع المسارات بـ middleware الصلاحيات
+- التحقق من صحة البيانات المدخلة
+- حماية من CSRF
+- تشفير البيانات الحساسة
 
-No license file is currently included in this repository.
+## الدعم
+
+للحصول على الدعم أو الإبلاغ عن مشاكل:
+- إنشاء issue في GitHub
+- التواصل عبر البريد الإلكتروني
+
+## الترخيص
+
+هذا المشروع مرخص تحت رخصة MIT.
+
+## المساهمون
+
+- أحمد حافظ - المطور الرئيسي
+
+---
+
+**ملاحظة**: هذا النظام مصمم خصيصاً للعمل مع Laravel Jetstream و Fortify للمصادقة.
