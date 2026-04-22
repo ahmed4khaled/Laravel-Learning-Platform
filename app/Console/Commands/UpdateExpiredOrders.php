@@ -2,32 +2,35 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Sell;
+use App\Models\Sale;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
-class UpdateExpiredSales extends Command
+class UpdateExpiredOrders extends Command
 {
     protected $signature = 'app:update-expired-sales';
-    protected $description = 'تغيير حالة المبيعات اللي انتهت مدتها إلى صفر';
 
-    public function handle()
+    protected $description = 'Deactivate expired lecture sales based on their expiration window.';
+
+    public function handle(): int
     {
         $now = Carbon::now();
 
-        // هات كل المبيعات اللي لسه حالتها مش صفر
-        $sales = Sell::where('state', '!=', 0)->get();
+        $sales = Sale::where('state', '!=', 0)->get();
 
         foreach ($sales as $sale) {
-            // نحسب تاريخ الانتهاء: تاريخ الإنشاء + مدة الحصة (بالأيام)
-            $expiryDate = Carbon::parse($sale->updated_at)->addDays($sale->date_exp);
+            if (empty($sale->date_exp)) {
+                continue;
+            }
+
+            $expiryDate = Carbon::parse($sale->updated_at)->addDays((int) $sale->date_exp);
 
             if ($now->greaterThanOrEqualTo($expiryDate)) {
-                $sale->status = 0;
+                $sale->state = 0;
                 $sale->save();
             }
         }
 
-        // $this->info("تم تحديث $affected مبيعة منتهية.");
+        return self::SUCCESS;
     }
 }

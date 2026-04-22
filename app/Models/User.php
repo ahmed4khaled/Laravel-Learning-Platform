@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-
 
 class User extends Authenticatable
 {
@@ -26,11 +24,14 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        // 'email',
+        'email',
         'Phone',
-        'Phone_par',   
+        'Phone_par',
         'class',
         'type',
+        'school',
+        'numnational',
+        'role',
         'password',
     ];
 
@@ -64,22 +65,21 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    // العلاقات مع الامتحانات
     public function examResults()
     {
         return $this->hasMany(ExamResult::class);
     }
-public function devices()
-{
-    return $this->hasMany(User_session::class);
-}
+
+    public function devices()
+    {
+        return $this->hasMany(User_session::class);
+    }
 
     public function studentAnswers()
     {
         return $this->hasMany(StudentAnswer::class);
     }
 
-    // التحقق من نوع المستخدم
     public function isAdmin()
     {
         return $this->type === 'Adm';

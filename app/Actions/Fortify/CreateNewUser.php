@@ -5,11 +5,9 @@ namespace App\Actions\Fortify;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -19,42 +17,54 @@ class CreateNewUser implements CreatesNewUsers
      * Validate and create a newly registered user.
      *
      * @param  array<string, string>  $input
-     */public function create(array $input): User
-{
-    Validator::make($input, [
-        'name'         => ['required', 'string', 'max:255'],
-        'Phone'        => ['required', 'string', 'max:255', 'unique:users,phone'],
-        'Phone_par'    => ['required', 'string', 'max:255'],
-        'class'        => ['required', 'string', 'max:255'],
-        'type'         => ['required', 'string', 'max:255'],
-        'password'     => $this->passwordRules(),
-        'terms'        => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
-    ])->validate();
+     */
+    public function create(array $input): User
+    {
+        Validator::make($input, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255', 'unique:users,email'],
+            'Phone' => ['nullable', 'string', 'max:255', 'unique:users,Phone'],
+            'Phone_par' => ['nullable', 'string', 'max:255'],
+            'class' => ['nullable', 'string', 'max:255'],
+            'type' => ['nullable', 'string', 'max:255'],
+            'school' => ['nullable', 'string', 'max:255'],
+            'numnational' => ['nullable', 'string', 'max:255', 'unique:users,numnational'],
+            'password' => $this->passwordRules(),
+            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
+        ])->validate();
 
-    // إنشاء المستخدم أولاً
-    $user = User::create([
-        'name'       => strip_tags(trim($input['name'])),
-        'Phone'      => preg_replace('/\D/', '', $input['Phone']),
-        'Phone_par'  => preg_replace('/\D/', '', $input['Phone_par']),
-        'type'       => strip_tags(trim($input['type'])),
-        'class'      => strip_tags(trim($input['class'])),
-        'password'   => Hash::make($input['password']),
-    ]);
+        $phone = isset($input['Phone']) && $input['Phone'] !== ''
+            ? preg_replace('/\D/', '', $input['Phone'])
+            : null;
 
-    // تسجيل بيانات الجهاز
-    $user->devices()->create([
-        'user_id'       => $user->id,
-        'device_token'  => isset($input['device_token']) ?$input['device_token'] : null ,
-        'phone'      => preg_replace('/\D/', '', $input['Phone']),        
-        'ip_address'    => $input['ip_address'] ?? request()->ip(),
-        'user_agent'    => $input['user_agent'] ?? request()->userAgent(),
-        'last_activity' => now(),
-        'screen_width'  => isset($input['screen_width']) ? (int) $input['screen_width'] : null,
-        'screen_height' => isset($input['screen_height']) ? (int) $input['screen_height'] : null,
-    ]);
-Auth::login($user); // يسجل الدخول تلقائيًا
+        $parentPhone = isset($input['Phone_par']) && $input['Phone_par'] !== ''
+            ? preg_replace('/\D/', '', $input['Phone_par'])
+            : null;
 
-    return $user;
-}
+        $user = User::create([
+            'name' => strip_tags(trim($input['name'])),
+            'email' => $input['email'] ?? $phone,
+            'Phone' => $phone,
+            'Phone_par' => $parentPhone,
+            'type' => $input['type'] ?? 'Center',
+            'class' => $input['class'] ?? 'grade3',
+            'school' => $input['school'] ?? null,
+            'numnational' => $input['numnational'] ?? null,
+            'password' => Hash::make($input['password']),
+        ]);
 
+        $user->devices()->create([
+            'user_id' => $user->id,
+            'token' => Str::random(40),
+            'device_token' => $input['device_token'] ?? null,
+            'phone' => $phone,
+            'ip_address' => $input['ip_address'] ?? request()->ip(),
+            'user_agent' => $input['user_agent'] ?? request()->userAgent(),
+            'last_activity' => now(),
+            'screen_width' => isset($input['screen_width']) ? (int) $input['screen_width'] : null,
+            'screen_height' => isset($input['screen_height']) ? (int) $input['screen_height'] : null,
+        ]);
+
+        return $user;
+    }
 }

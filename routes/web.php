@@ -14,6 +14,10 @@ use App\Http\Controllers\Dashboard\QuestionController;
 use App\Http\Controllers\Dashboard\ExamResultController;
 use App\Http\Controllers\AssistantQuestionsController;
 use App\Http\Controllers\AssignmentDashboardController;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 /*
@@ -26,6 +30,31 @@ use App\Http\Controllers\AssignmentDashboardController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::post('/login', function (Request $request) {
+    $validated = $request->validate([
+        'email' => ['required', 'string'],
+        'password' => ['required', 'string'],
+    ]);
+
+    $login = trim($validated['email']);
+
+    $user = User::query()
+        ->where('email', $login)
+        ->orWhere('Phone', $login)
+        ->first();
+
+    if (!$user || !Hash::check($validated['password'], $user->password)) {
+        return back()->withErrors([
+            'email' => trans('auth.failed'),
+        ])->onlyInput('email');
+    }
+
+    Auth::login($user, true);
+    $request->session()->regenerate();
+
+    return redirect()->intended(RouteServiceProvider::HOME);
+})->middleware('guest')->name('login');
 
 // Assignment Dashboard Routes
 Route::prefix('assignments/dashboard')->name('assignments.dashboard')->group(function () {

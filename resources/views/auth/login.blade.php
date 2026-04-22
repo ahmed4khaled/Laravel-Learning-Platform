@@ -2410,15 +2410,15 @@ body {
                             <label for="Phone">رقم الهاتف</label>
                             <div class="input-container">
                                 <input type="text" 
-                                       id="Phone" 
-                                       name="Phone" 
-                                       value="{{ old('Phone') }}" 
+                                       id="email" 
+                                       name="email" 
+                                       value="{{ old('email') }}" 
                                        required 
-                                       autocomplete="Phone"
-                                       class="{{ $errors->has('Phone') ? 'error' : '' }}">
+                                       autocomplete="username"
+                                       class="{{ $errors->has('email') ? 'error' : '' }}">
                                 <i class="ri-phone-line input-icon"></i>
                             </div>
-                            @error('Phone')
+                            @error('email')
                                 <div class="field-error">
                                     <i class="ri-error-warning-line"></i>
                                     {{ $message }}
